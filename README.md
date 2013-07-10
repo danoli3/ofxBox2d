@@ -10,11 +10,18 @@ This is a simple wrapper for box2d using Openframeworks. The examples below are 
 Thanks,
 Todd
 
+-- Updated to 2.3.0
+Just updated the addon to Box2d 2.3.0 (latest) http://code.google.com/p/box2d/
+Any problems with the core library please refer to http://code.google.com/p/box2d/issues/list
+There has been some major changes to the library so please refer to the api.
+-Danoli3
+
+
 Installation
 ------------
-Place ofxPd within a folder in the apps folder of the OF dir tree:
+Place ofxBox2d within a folder in the apps folder of the OF dir tree:
 <pre>
-openframeworks/addons/ofxPd
+openframeworks/addons/ofxBox2d
 </pre>
 
 Compatibility
@@ -30,17 +37,5 @@ cd ofxBox2d
 git checkout 007
 </pre>
 
-Known issues
-------------
-Check the issues on Github: https://github.com/vanderlin/ofxBox2d/issues
 
-#### Missing define in triangle_impl.hpp on Win
 
-In older versions of ofxBox2d, there is a missing define in the Triangle library that causes the build to fail on Windows. You can uncomment this in `libs\triangle\triangle_impl.hpp` by changing line 235 from this:
-<pre>
-/* #define NO_TIMER */
-</pre>
-to this:
-<pre>
-#define NO_TIMER
-</pre>
