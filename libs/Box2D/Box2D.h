@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2006-2009 Erin Catto http://www.gphysics.com
+* Copyright (c) 2006-2009 Erin Catto http://www.box2d.org
 *
 * This software is provided 'as-is', without any express or implied
 * warranty.  In no event will the authors be held liable for any damages
@@ -32,8 +32,12 @@ For discussion please visit http://box2d.org/forum
 // These include files constitute the main Box2D API
 
 #include "b2Settings.h"
+#include "b2Draw.h"
+#include "b2Timer.h"
 
 #include "b2CircleShape.h"
+#include "b2EdgeShape.h"
+#include "b2ChainShape.h"
 #include "b2PolygonShape.h"
 
 #include "b2BroadPhase.h"
@@ -52,11 +56,13 @@ For discussion please visit http://box2d.org/forum
 #include "b2DistanceJoint.h"
 #include "b2FrictionJoint.h"
 #include "b2GearJoint.h"
-#include "b2LineJoint.h"
+#include "b2MotorJoint.h"
 #include "b2MouseJoint.h"
 #include "b2PrismaticJoint.h"
 #include "b2PulleyJoint.h"
 #include "b2RevoluteJoint.h"
+#include "b2RopeJoint.h"
 #include "b2WeldJoint.h"
+#include "b2WheelJoint.h"
 
 #endif

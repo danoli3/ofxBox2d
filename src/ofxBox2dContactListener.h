@@ -12,7 +12,7 @@
 class ofxBox2dContactListener : public b2ContactListener {
 	
 public:
-	virtual void Add(const b2ContactPoint* point) {
+	virtual void Add(const b2Contact* point) {
 		/*
 		// point of collision
 		b2Vec2 p = point->position;
@@ -28,7 +28,7 @@ public:
 		//MonsterData * theData = (MonsterData*)body_1->GetUserData();
 		*/
 	}
-	virtual void Remove(const b2ContactPoint* point) {
+	virtual void Remove(const b2Contact* point) {
 	}
 	
 	ofxBox2dContactListener() {

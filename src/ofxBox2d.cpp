@@ -2,6 +2,10 @@
 
 // ------------------------------------------------------ 
 ofxBox2d::ofxBox2d() {
+	ofLogNotice( "Box2D Version: " +
+				ofToString(b2_version.major) + "."
+				+ ofToString(b2_version.minor) + "."
+				 + ofToString(b2_version.revision));
 	world = NULL;
 	m_bomb = NULL;
 #ifdef TARGET_OPENGLES
@@ -80,7 +84,8 @@ void ofxBox2d::init() {
 	//worldAABB.lowerBound.Set(-100.0f, -100.0f);
 	//worldAABB.upperBound.Set(100.0f, 100.0f);
 	
-	world = new b2World(b2Vec2(gravity.x, gravity.y), doSleep);
+	world = new b2World(b2Vec2(gravity.x, gravity.y));
+	world->SetAllowSleeping(doSleep);
 	world->SetDebugDraw(&debugRender);
 	
 	ofLog(OF_LOG_NOTICE, "ofxBox2d:: - world created -");
@@ -319,8 +324,8 @@ void ofxBox2d::createGround(float x1, float y1, float x2, float y2) {
 	b2BodyDef bd;
 	ground = world->CreateBody(&bd);
 	
-	b2PolygonShape shape;
-	shape.SetAsEdge(b2Vec2(x1/OFX_BOX2D_SCALE, y1/OFX_BOX2D_SCALE), b2Vec2(x2/OFX_BOX2D_SCALE, y2/OFX_BOX2D_SCALE));
+	b2EdgeShape shape;
+	shape.Set(b2Vec2(x1/OFX_BOX2D_SCALE, y1/OFX_BOX2D_SCALE), b2Vec2(x2/OFX_BOX2D_SCALE, y2/OFX_BOX2D_SCALE));
 	ground->CreateFixture(&shape, 0.0f);
 
 }
@@ -346,25 +351,25 @@ void ofxBox2d::createBounds(float x, float y, float w, float h) {
 	bd.position.Set(0, 0);
 	ground = world->CreateBody(&bd);	
 	
-	b2PolygonShape shape;
+	b2EdgeShape shape;
 	
 	ofRectangle rec(x/OFX_BOX2D_SCALE, y/OFX_BOX2D_SCALE, w/OFX_BOX2D_SCALE, h/OFX_BOX2D_SCALE);
 	
 	
 	//right wall
-	shape.SetAsEdge(b2Vec2(rec.x+rec.width, rec.y), b2Vec2(rec.x+rec.width, rec.y+rec.height));
+	shape.Set(b2Vec2(rec.x+rec.width, rec.y), b2Vec2(rec.x+rec.width, rec.y+rec.height));
 	ground->CreateFixture(&shape, 0.0f);
 	
 	//left wall
-	shape.SetAsEdge(b2Vec2(rec.x, rec.y), b2Vec2(rec.x, rec.y+rec.height));
+	shape.Set(b2Vec2(rec.x, rec.y), b2Vec2(rec.x, rec.y+rec.height));
 	ground->CreateFixture(&shape, 0.0f);
 	
 	// top wall
-	shape.SetAsEdge(b2Vec2(rec.x, rec.y), b2Vec2(rec.x+rec.width, rec.y));
+	shape.Set(b2Vec2(rec.x, rec.y), b2Vec2(rec.x+rec.width, rec.y));
 	ground->CreateFixture(&shape, 0.0f);
 	
 	// bottom wall
-	shape.SetAsEdge(b2Vec2(rec.x, rec.y+rec.height), b2Vec2(rec.x+rec.width, rec.y+rec.height));
+	shape.Set(b2Vec2(rec.x, rec.y+rec.height), b2Vec2(rec.x+rec.width, rec.y+rec.height));
 	ground->CreateFixture(&shape, 0.0f);
 	
 }
@@ -439,15 +444,13 @@ void ofxBox2d::drawGround() {
 	
 	const b2Transform& xf = ground->GetTransform();
 	for (b2Fixture* f = ground->GetFixtureList(); f; f = f->GetNext()) {
-		b2PolygonShape* poly = (b2PolygonShape*)f->GetShape();
+		b2EdgeShape* poly = (b2EdgeShape*)f->GetShape();
 		if(poly) {
 			ofNoFill();
 			ofSetColor(120, 0, 120);
 			ofBeginShape();
-			for(int i=0; i<poly->m_vertexCount; i++) {
-				b2Vec2 pt = b2Mul(xf, poly->m_vertices[i]);
-				ofVertex(pt.x*OFX_BOX2D_SCALE, pt.y*OFX_BOX2D_SCALE);
-			}
+			ofVertex(poly->m_vertex1.x*OFX_BOX2D_SCALE, poly->m_vertex1.y*OFX_BOX2D_SCALE);
+			ofVertex(poly->m_vertex2.x*OFX_BOX2D_SCALE, poly->m_vertex2.y*OFX_BOX2D_SCALE);
 			ofEndShape(true);
 		}
 	}

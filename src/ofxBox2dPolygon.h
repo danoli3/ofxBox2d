@@ -11,6 +11,7 @@ private:
 	bool	bIsSimplified;
 	bool    bIsTriangulated;
 	bool	bSetAsEdge;
+	bool    bSetAsChain;
 	
 	float   area;
 	ofVec2f center;

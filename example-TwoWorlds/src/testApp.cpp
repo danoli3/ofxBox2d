@@ -7,8 +7,11 @@ void testApp::setup(){
     
     
     // the world bounds
-    boundsA.set(0, 0, 500, 500);
-    boundsB.set(500, 0, 500, 500);
+    boundsA.set(0, 0, ofGetWidth()/2, ofGetHeight());
+    boundsB.set(ofGetWidth()/2, 0, ofGetWidth()/2, ofGetHeight());
+	
+	midPointA.set((ofGetWidth()/2)/2, ofGetHeight()/2);
+	midPointB.set(ofGetWidth()/2 + (ofGetWidth()/2)/2, ofGetHeight()/2);
     
     
     // setup world A
@@ -134,8 +137,8 @@ void testApp::draw(){
     ofSetColor(90);  ofDrawBitmapString("World B\nGravity "+ofToString(box2dB.getGravity().x, 1)+","+ofToString(box2dB.getGravity().y, 1), 750, ofGetHeight()/2);    
     
     
-    ofPoint centerA(250, 250);
-    ofPoint centerB(750, 250);
+    ofPoint centerA(midPointA.x, midPointA.y);
+    ofPoint centerB(midPointB.x, midPointB.y);
     ofSetColor(255);
     drawGravity(centerA, box2dA.getGravity());
     drawGravity(centerB, box2dB.getGravity());
@@ -164,12 +167,12 @@ void testApp::mouseDragged(int x, int y, int button){
     float maxGravity = 100;
     
     if(boundsA.inside(x, y)) {
-        float gx = ofMap(x, 0, 500, -maxGravity, maxGravity);
+        float gx = ofMap(x, 0, ofGetWidth()/2, -maxGravity, maxGravity);
         float gy = ofMap(y, 0, ofGetHeight(), -maxGravity, maxGravity);
         box2dA.setGravity(gx, gy);
     }
     else if(boundsB.inside(x, y)) {
-        float gx = ofMap(x, 500, ofGetWidth(), -maxGravity, maxGravity);
+        float gx = ofMap(x, ofGetWidth()/2, ofGetWidth(), -maxGravity, maxGravity);
         float gy = ofMap(y, 0, ofGetHeight(), -maxGravity, maxGravity);
         box2dB.setGravity(gx, gy);
     }

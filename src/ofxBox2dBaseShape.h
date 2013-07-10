@@ -14,6 +14,7 @@ public:
 	bool			dead;
 	bool			alive;
 	bool			setMassFromShape;
+	bool			active;
 	
 	float			density;
 	float			bounce;

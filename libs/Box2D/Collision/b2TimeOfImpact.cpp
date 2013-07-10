@@ -1,5 +1,5 @@
 /*
-* Copyright (c) 2007-2009 Erin Catto http://www.gphysics.com
+* Copyright (c) 2007-2009 Erin Catto http://www.box2d.org
 *
 * This software is provided 'as-is', without any express or implied
 * warranty.  In no event will the authors be held liable for any damages
@@ -21,14 +21,16 @@
 #include "b2TimeOfImpact.h"
 #include "b2CircleShape.h"
 #include "b2PolygonShape.h"
+#include "b2Timer.h"
 
 #include <cstdio>
+using namespace std;
 
+float32 b2_toiTime, b2_toiMaxTime;
 int32 b2_toiCalls, b2_toiIters, b2_toiMaxIters;
 int32 b2_toiRootIters, b2_toiMaxRootIters;
 
-int32 b2_toiMaxOptIters;
-
+//
 struct b2SeparationFunction
 {
 	enum Type
@@ -42,7 +44,8 @@ struct b2SeparationFunction
 
 	float32 Initialize(const b2SimplexCache* cache,
 		const b2DistanceProxy* proxyA, const b2Sweep& sweepA,
-		const b2DistanceProxy* proxyB, const b2Sweep& sweepB)
+		const b2DistanceProxy* proxyB, const b2Sweep& sweepB,
+		float32 t1)
 	{
 		m_proxyA = proxyA;
 		m_proxyB = proxyB;
@@ -53,8 +56,8 @@ struct b2SeparationFunction
 		m_sweepB = sweepB;
 
 		b2Transform xfA, xfB;
-		m_sweepA.GetTransform(&xfA, 0.0f);
-		m_sweepB.GetTransform(&xfB, 0.0f);
+		m_sweepA.GetTransform(&xfA, t1);
+		m_sweepB.GetTransform(&xfB, t1);
 
 		if (count == 1)
 		{
@@ -76,7 +79,7 @@ struct b2SeparationFunction
 
 			m_axis = b2Cross(localPointB2 - localPointB1, 1.0f);
 			m_axis.Normalize();
-			b2Vec2 normal = b2Mul(xfB.R, m_axis);
+			b2Vec2 normal = b2Mul(xfB.q, m_axis);
 
 			m_localPoint = 0.5f * (localPointB1 + localPointB2);
 			b2Vec2 pointB = b2Mul(xfB, m_localPoint);
@@ -101,7 +104,7 @@ struct b2SeparationFunction
 			
 			m_axis = b2Cross(localPointA2 - localPointA1, 1.0f);
 			m_axis.Normalize();
-			b2Vec2 normal = b2Mul(xfA.R, m_axis);
+			b2Vec2 normal = b2Mul(xfA.q, m_axis);
 
 			m_localPoint = 0.5f * (localPointA1 + localPointA2);
 			b2Vec2 pointA = b2Mul(xfA, m_localPoint);
@@ -119,6 +122,7 @@ struct b2SeparationFunction
 		}
 	}
 
+	//
 	float32 FindMinSeparation(int32* indexA, int32* indexB, float32 t) const
 	{
 		b2Transform xfA, xfB;
@@ -129,8 +133,8 @@ struct b2SeparationFunction
 		{
 		case e_points:
 			{
-				b2Vec2 axisA = b2MulT(xfA.R,  m_axis);
-				b2Vec2 axisB = b2MulT(xfB.R, -m_axis);
+				b2Vec2 axisA = b2MulT(xfA.q,  m_axis);
+				b2Vec2 axisB = b2MulT(xfB.q, -m_axis);
 
 				*indexA = m_proxyA->GetSupport(axisA);
 				*indexB = m_proxyB->GetSupport(axisB);
@@ -147,10 +151,10 @@ struct b2SeparationFunction
 
 		case e_faceA:
 			{
-				b2Vec2 normal = b2Mul(xfA.R, m_axis);
+				b2Vec2 normal = b2Mul(xfA.q, m_axis);
 				b2Vec2 pointA = b2Mul(xfA, m_localPoint);
 
-				b2Vec2 axisB = b2MulT(xfB.R, -normal);
+				b2Vec2 axisB = b2MulT(xfB.q, -normal);
 				
 				*indexA = -1;
 				*indexB = m_proxyB->GetSupport(axisB);
@@ -164,10 +168,10 @@ struct b2SeparationFunction
 
 		case e_faceB:
 			{
-				b2Vec2 normal = b2Mul(xfB.R, m_axis);
+				b2Vec2 normal = b2Mul(xfB.q, m_axis);
 				b2Vec2 pointB = b2Mul(xfB, m_localPoint);
 
-				b2Vec2 axisA = b2MulT(xfA.R, -normal);
+				b2Vec2 axisA = b2MulT(xfA.q, -normal);
 
 				*indexB = -1;
 				*indexA = m_proxyA->GetSupport(axisA);
@@ -187,6 +191,7 @@ struct b2SeparationFunction
 		}
 	}
 
+	//
 	float32 Evaluate(int32 indexA, int32 indexB, float32 t) const
 	{
 		b2Transform xfA, xfB;
@@ -197,9 +202,6 @@ struct b2SeparationFunction
 		{
 		case e_points:
 			{
-				b2Vec2 axisA = b2MulT(xfA.R,  m_axis);
-				b2Vec2 axisB = b2MulT(xfB.R, -m_axis);
-
 				b2Vec2 localPointA = m_proxyA->GetVertex(indexA);
 				b2Vec2 localPointB = m_proxyB->GetVertex(indexB);
 
@@ -212,10 +214,8 @@ struct b2SeparationFunction
 
 		case e_faceA:
 			{
-				b2Vec2 normal = b2Mul(xfA.R, m_axis);
+				b2Vec2 normal = b2Mul(xfA.q, m_axis);
 				b2Vec2 pointA = b2Mul(xfA, m_localPoint);
-
-				b2Vec2 axisB = b2MulT(xfB.R, -normal);
 
 				b2Vec2 localPointB = m_proxyB->GetVertex(indexB);
 				b2Vec2 pointB = b2Mul(xfB, localPointB);
@@ -226,10 +226,8 @@ struct b2SeparationFunction
 
 		case e_faceB:
 			{
-				b2Vec2 normal = b2Mul(xfB.R, m_axis);
+				b2Vec2 normal = b2Mul(xfB.q, m_axis);
 				b2Vec2 pointB = b2Mul(xfB, m_localPoint);
-
-				b2Vec2 axisA = b2MulT(xfA.R, -normal);
 
 				b2Vec2 localPointA = m_proxyA->GetVertex(indexA);
 				b2Vec2 pointA = b2Mul(xfA, localPointA);
@@ -256,6 +254,8 @@ struct b2SeparationFunction
 // by computing the largest time at which separation is maintained.
 void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 {
+	b2Timer timer;
+
 	++b2_toiCalls;
 
 	output->state = b2TOIOutput::e_unknown;
@@ -325,7 +325,7 @@ void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 
 		// Initialize the separating axis.
 		b2SeparationFunction fcn;
-		fcn.Initialize(&cache, proxyA, sweepA, proxyB, sweepB);
+		fcn.Initialize(&cache, proxyA, sweepA, proxyB, sweepB, t1);
 #if 0
 		// Dump the curve seen by the root finder
 		{
@@ -422,6 +422,9 @@ void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 					t = 0.5f * (a1 + a2);
 				}
 
+				++rootIterCount;
+				++b2_toiRootIters;
+
 				float32 s = fcn.Evaluate(indexA, indexB, t);
 
 				if (b2Abs(s - target) < tolerance)
@@ -442,10 +445,7 @@ void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 					a2 = t;
 					s2 = s;
 				}
-
-				++rootIterCount;
-				++b2_toiRootIters;
-
+				
 				if (rootIterCount == 50)
 				{
 					break;
@@ -480,4 +480,8 @@ void b2TimeOfImpact(b2TOIOutput* output, const b2TOIInput* input)
 	}
 
 	b2_toiMaxIters = b2Max(b2_toiMaxIters, iter);
+
+	float32 time = timer.GetMilliseconds();
+	b2_toiMaxTime = b2Max(b2_toiMaxTime, time);
+	b2_toiTime += time;
 }

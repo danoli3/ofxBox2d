@@ -146,7 +146,7 @@ void testApp::mouseReleased(int x, int y, int button) {
 		poly.addVertex(lines.back()[i]);
 	}
 	
-	//poly.setPhysics(1, .2, 1);  // uncomment this to see it fall!
+	poly.setPhysics(1, .2, 1);  // uncomment this to see it fall!
 	poly.create(box2d.getWorld());
 	polyLines.push_back(poly);
 	

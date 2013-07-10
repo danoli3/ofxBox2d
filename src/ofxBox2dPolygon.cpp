@@ -4,6 +4,7 @@
  *
  *  Created by Todd Vanderlin on 1/14/11.
  *  Copyright 2011 Interactive Design. All rights reserved.
+ *  Modifed by Daniel Rosser <danoli3@gmail.com> on 7/7/13
  *
  */
 
@@ -14,7 +15,8 @@
 ofxBox2dPolygon::ofxBox2dPolygon() { 
 	bIsTriangulated = false;
 	bIsSimplified   = false;
-	bSetAsEdge	    = true;	// should this be default
+	bSetAsEdge	    = false;
+	bSetAsChain     = false;
 }
 
 //----------------------------------------
@@ -161,6 +163,11 @@ void ofxBox2dPolygon::create(b2World * b2dworld) {
 		return;	
 	}
 	
+	if(size() >= b2_maxPolygonVertices) {
+		ofLogNotice("polygon size '" + ofToString(size()) + "' is larger than box2d maximum... making into a chain");
+		bSetAsChain = true;
+	}
+	
 	if (body != NULL) {
 		b2dworld->DestroyBody(body);
 		body = NULL;
@@ -172,7 +179,7 @@ void ofxBox2dPolygon::create(b2World * b2dworld) {
 	body			= b2dworld->CreateBody(&bd);
 
 	if(bIsTriangulated) {
-		
+		bSetAsChain = false;
 		b2PolygonShape	shape;
 		b2FixtureDef	fixture;
 		b2Vec2			verts[3];
@@ -201,10 +208,10 @@ void ofxBox2dPolygon::create(b2World * b2dworld) {
 	else {
 		if(bSetAsEdge) {
 			for (int i=1; i<size(); i++) {
-				b2PolygonShape	shape;
+				b2EdgeShape shape;
 				b2Vec2 a = screenPtToWorldPt(getVertices()[i-1]);
 				b2Vec2 b = screenPtToWorldPt(getVertices()[i]);
-				shape.SetAsEdge(a, b);
+				shape.Set(a, b);
 				fixture.shape		= &shape;
 				fixture.density		= density;
 				fixture.restitution = bounce;
@@ -212,16 +219,32 @@ void ofxBox2dPolygon::create(b2World * b2dworld) {
 				
 				body->CreateFixture(&fixture);
 			}	
+		} else if(bSetAsChain) {
+			
+			vector<b2Vec2> points;
+			for (int i=0; i<size(); i++) {
+				points.push_back(b2Vec2(getVertices()[i].x / OFX_BOX2D_SCALE, getVertices()[i].y / OFX_BOX2D_SCALE));
+			}
+			b2ChainShape	chain;
+			chain.CreateChain(&points[0], points.size());
+			fixture.shape		= &chain;
+			fixture.density		= density;
+			fixture.restitution = bounce;
+			fixture.friction	= friction;
+			
+			body->CreateFixture(&fixture);
+			
 		}
 		else {
-            vector<b2Vec2>verts;
-            verts.assign(size()-1, b2Vec2());
-			for (int i=0; i<size(); i++) {
-				ofVec2f p = getVertices()[i] / OFX_BOX2D_SCALE;
-				verts[i]  = b2Vec2(p.x, p.y);
-			}
+			
 			b2PolygonShape	shape;
-			shape.Set(&verts[0], size()-1);
+			int dasize = size()-1;
+			shape.m_count = int(size()-1);
+			for (int i=0; i<size(); i++) {
+				shape.m_vertices[i].Set(getVertices()[i].x / OFX_BOX2D_SCALE, getVertices()[i].y / OFX_BOX2D_SCALE);
+			}
+			shape.m_count = int(size()-1);
+			shape.Set(shape.m_vertices, shape.m_count);
 			
 			fixture.shape		= &shape;
 			fixture.density		= density;
@@ -244,18 +267,37 @@ void ofxBox2dPolygon::addAttractionPoint (ofVec2f pt, float amt) {
         const b2Transform& xf = body->GetTransform();
 		
         for (b2Fixture* f = body->GetFixtureList(); f; f = f->GetNext()) {
-            b2PolygonShape* poly = (b2PolygonShape*)f->GetShape();
-            
-            if(poly) {
-                b2Vec2 P(pt.x/OFX_BOX2D_SCALE, pt.y/OFX_BOX2D_SCALE);
-                
-                for(int i=0; i<poly->GetVertexCount(); i++) {
-                    b2Vec2 qt = b2Mul(xf, poly->GetVertex(i));
-                    b2Vec2 D = P - qt; 
-                    b2Vec2 F = amt * D;
-                    body->ApplyForce(F, P);
-                }                    
-            }
+			if(bSetAsEdge) {
+				// @TODO
+				
+			} else if(bSetAsChain) {
+				b2ChainShape* chain = (b2ChainShape*)f->GetShape();
+				
+				if(chain) {
+					b2Vec2 P(pt.x/OFX_BOX2D_SCALE, pt.y/OFX_BOX2D_SCALE);
+					
+					for(int i=0; i<chain->m_count; i++) {
+						b2Vec2 qt = b2Mul(xf, chain->m_vertices[i]);
+						b2Vec2 D = P - qt;
+						b2Vec2 F = amt * D;
+						body->ApplyForce(F, P, active);
+					}
+				}
+				
+			} else {
+				b2PolygonShape* poly = (b2PolygonShape*)f->GetShape();
+				
+				if(poly) {
+					b2Vec2 P(pt.x/OFX_BOX2D_SCALE, pt.y/OFX_BOX2D_SCALE);
+					
+					for(int i=0; i<poly->GetVertexCount(); i++) {
+						b2Vec2 qt = b2Mul(xf, poly->GetVertex(i));
+						b2Vec2 D = P - qt; 
+						b2Vec2 F = amt * D;
+						body->ApplyForce(F, P, active);
+					}                    
+				}
+			}
         }
     }
 }
@@ -276,20 +318,52 @@ void ofxBox2dPolygon::addRepulsionForce(ofVec2f pt, float amt) {
         const b2Transform& xf = body->GetTransform();
 		
         for (b2Fixture* f = body->GetFixtureList(); f; f = f->GetNext()) {
-            b2PolygonShape* poly = (b2PolygonShape*)f->GetShape();
-            
-            if(poly) {
-                b2Vec2 P(pt.x/OFX_BOX2D_SCALE, pt.y/OFX_BOX2D_SCALE);
-                
-                for(int i=0; i<poly->GetVertexCount(); i++) {
-                    b2Vec2 qt = b2Mul(xf, poly->GetVertex(i));
-                    b2Vec2 D = P - qt; 
-                    b2Vec2 F = amt * D;
-                    body->ApplyForce(-F, P);
-                }                    
-            }
+			if(bSetAsEdge) {
+				b2EdgeShape* edge = (b2EdgeShape*)f->GetShape();
+				
+				if(edge) {
+					b2Vec2 P(pt.x/OFX_BOX2D_SCALE, pt.y/OFX_BOX2D_SCALE);
+					
+//					for(int i=0; i<edge->m_ i++) {
+//						b2Vec2 qt = b2Mul(xf, edge->GetVertex(i));
+//						b2Vec2 D = P - qt;
+//						b2Vec2 F = amt * D;
+//						body->ApplyForce(-F, P, active);
+//					}
+				}
+			}
+			else if(bSetAsChain) {
+				b2ChainShape* chain = (b2ChainShape*)f->GetShape();
+				
+				if(chain) {
+					b2Vec2 P(pt.x/OFX_BOX2D_SCALE, pt.y/OFX_BOX2D_SCALE);
+					
+					for(int i=0; i<chain->m_count; i++) {
+						b2Vec2 qt = b2Mul(xf, chain->m_vertices[i]);
+						b2Vec2 D = P - qt;
+						b2Vec2 F = amt * D;
+						body->ApplyForce(-F, P, active);
+					}
+				}
+			}
+			else {
+				
+				b2PolygonShape* poly = (b2PolygonShape*)f->GetShape();
+				
+				if(poly) {
+					b2Vec2 P(pt.x/OFX_BOX2D_SCALE, pt.y/OFX_BOX2D_SCALE);
+					
+					for(int i=0; i<poly->GetVertexCount(); i++) {
+						b2Vec2 qt = b2Mul(xf, poly->GetVertex(i));
+						b2Vec2 D = P - qt;
+						b2Vec2 F = amt * D;
+						body->ApplyForce(-F, P, active);
+					}
+				}
+			}
+			
+			}
         }
-    }
 }
 
 //----------------------------------------
@@ -307,17 +381,36 @@ void ofxBox2dPolygon::draw() {
 	const b2Transform& xf = body->GetTransform();
 	
 	for (b2Fixture * f = body->GetFixtureList(); f; f = f->GetNext()) {
-		b2PolygonShape * poly = (b2PolygonShape*)f->GetShape();
-		
-		if(poly) {
-			drawShape.clear();
-			for(int i=0; i<poly->GetVertexCount(); i++) {
-				b2Vec2 pt = b2Mul(xf, poly->GetVertex(i));
-				drawShape.addVertex(pt.x*OFX_BOX2D_SCALE, pt.y*OFX_BOX2D_SCALE);
+		if(bSetAsEdge) {
+			//@TODO
+		}
+		else if(bSetAsChain) {
+			b2ChainShape* chain = (b2ChainShape*)f->GetShape();
+			
+			if(chain) {
+				drawShape.clear();
+					for(int i=0; i<chain->m_count; i++) {
+						b2Vec2 pt = b2Mul(xf, chain->m_vertices[i]);
+						drawShape.addVertex(pt.x*OFX_BOX2D_SCALE, pt.y*OFX_BOX2D_SCALE);
+					}
+					if(isClosed()) drawShape.close();
+				drawShape.draw();
 			}
-			if(isClosed()) drawShape.close();
-			drawShape.draw();
-		
+			
+		} else {
+				
+			b2PolygonShape * poly = (b2PolygonShape*)f->GetShape();
+			
+			if(poly) {
+				drawShape.clear();
+				for(int i=0; i<poly->GetVertexCount(); i++) {
+					b2Vec2 pt = b2Mul(xf, poly->GetVertex(i));
+					drawShape.addVertex(pt.x*OFX_BOX2D_SCALE, pt.y*OFX_BOX2D_SCALE);
+				}
+				if(isClosed()) drawShape.close();
+				drawShape.draw();
+			
+			}
 		}
 	}
 	

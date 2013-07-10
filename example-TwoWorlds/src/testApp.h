@@ -31,6 +31,8 @@ public:
     
     ofRectangle boundsA;
     ofRectangle boundsB;
+	ofPoint midPointA;
+	ofPoint midPointB;
     
     
 };
