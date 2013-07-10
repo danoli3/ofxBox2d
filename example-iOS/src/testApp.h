@@ -6,7 +6,7 @@
 #include "ofxBox2d.h"
 
 
-class testApp : public ofxiPhoneApp {
+class testApp : public ofxiPhoneApp{
 	
 public:
 	void setup();

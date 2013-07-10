@@ -4,7 +4,7 @@
  *
  *  Created by Todd Vanderlin on 1/14/11.
  *  Copyright 2011 Interactive Design. All rights reserved.
- *  Modifed by Daniel Rosser <danoli3@gmail.com> on 7/7/13
+ *  Modifed by Daniel Rosser <danoli3@gmail.com> on 7/7/13 for Box2D 2.* +
  *
  */
 
@@ -238,12 +238,11 @@ void ofxBox2dPolygon::create(b2World * b2dworld) {
 		else {
 			
 			b2PolygonShape	shape;
-			int dasize = size()-1;
-			shape.m_count = int(size()-1);
+			shape.m_count = int(size());
 			for (int i=0; i<size(); i++) {
 				shape.m_vertices[i].Set(getVertices()[i].x / OFX_BOX2D_SCALE, getVertices()[i].y / OFX_BOX2D_SCALE);
 			}
-			shape.m_count = int(size()-1);
+			shape.m_count = int(size());
 			shape.Set(shape.m_vertices, shape.m_count);
 			
 			fixture.shape		= &shape;

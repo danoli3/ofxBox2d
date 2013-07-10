@@ -14,6 +14,9 @@
 * 2. Altered source versions must be plainly marked as such, and must not be
 * misrepresented as being the original software.
 * 3. This notice may not be removed or altered from any source distribution.
+*
+* Note: b2Rope.cpp/h is not part of the rigid body library. It is just some side project Erin Catto was experimenting with. 
+* You cannot use it with rigid bodies or any collision.
 */
 
 #ifndef B2_ROPE_H

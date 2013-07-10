@@ -17,7 +17,7 @@ void testApp::setup(){
     box2d.createBounds();
     box2d.setIterations(1, 1); // minimum for IOS
     
-    for (int i=0; i<10; i++) {
+    for (int i=0; i<10; i++){
         ofxBox2dCircle c;
         c.setPhysics(1, 0.4, 0.4);
         c.setup(box2d.getWorld(), ofRandomWidth(), ofRandomHeight(), ofRandom(13, 25));
@@ -27,7 +27,7 @@ void testApp::setup(){
 }
 
 //--------------------------------------------------------------
-void testApp::update() {
+void testApp::update(){
     
     ofVec2f gravity = ofxAccelerometer.getForce();
     gravity.y *= -1;

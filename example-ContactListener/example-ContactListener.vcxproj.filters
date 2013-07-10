@@ -31,6 +31,9 @@
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\b2CollideCircle.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Collision</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\b2CollideEdge.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Collision</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\b2CollidePolygon.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Collision</Filter>
 		</ClCompile>
@@ -46,13 +49,22 @@
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\b2TimeOfImpact.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Collision</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes\b2ChainShape.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Collision\Shapes</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes\b2CircleShape.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Collision\Shapes</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes\b2EdgeShape.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Collision\Shapes</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes\b2PolygonShape.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Collision\Shapes</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2BlockAllocator.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2Draw.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2Math.cpp">
@@ -62,6 +74,9 @@
 			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2StackAllocator.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2Timer.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\b2Body.cpp">
@@ -82,6 +97,12 @@
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\b2WorldCallbacks.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2CircleContact.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
 		</ClCompile>
@@ -91,13 +112,16 @@
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2ContactSolver.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2PolygonContact.cpp">
-			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
-		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2TOISolver.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2DistanceJoint.cpp">
@@ -112,7 +136,7 @@
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2Joint.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
 		</ClCompile>
-		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2LineJoint.cpp">
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2MotorJoint.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2MouseJoint.cpp">
@@ -127,8 +151,17 @@
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2RopeJoint.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2WeldJoint.cpp">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2WheelJoint.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Rope\b2Rope.cpp">
+			<Filter>addons\ofxBox2d\libs\Box2D\Rope</Filter>
 		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxBox2d\libs\triangle\del_impl.cpp">
 			<Filter>addons\ofxBox2d\libs\triangle</Filter>
@@ -170,6 +203,9 @@
 		</Filter>
 		<Filter Include="addons\ofxBox2d\libs\Box2D\Dynamics\Joints">
 			<UniqueIdentifier>{ae05c5ee-bf71-cc10-5b20-0e613534119a}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxBox2d\libs\Box2D\Rope">
+			<UniqueIdentifier>{ca77ad29-da79-f7bd-1bb0-a346fab12bc1}</UniqueIdentifier>
 		</Filter>
 		<Filter Include="addons\ofxBox2d\libs\triangle">
 			<UniqueIdentifier>{59dda46b-31f2-d064-1590-f1facb022602}</UniqueIdentifier>
@@ -227,7 +263,13 @@
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\b2TimeOfImpact.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Collision</Filter>
 		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes\b2ChainShape.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Collision\Shapes</Filter>
+		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes\b2CircleShape.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Collision\Shapes</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes\b2EdgeShape.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Collision\Shapes</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\Shapes\b2PolygonShape.h">
@@ -239,6 +281,12 @@
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2BlockAllocator.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
 		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2Draw.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2GrowableStack.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
+		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2Math.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
 		</ClInclude>
@@ -246,6 +294,9 @@
 			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2StackAllocator.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Common\b2Timer.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Common</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\b2Body.h">
@@ -269,6 +320,12 @@
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\b2WorldCallbacks.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics</Filter>
 		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2ChainAndCircleContact.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2ChainAndPolygonContact.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
+		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2CircleContact.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
 		</ClInclude>
@@ -278,13 +335,16 @@
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2ContactSolver.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
 		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2EdgeAndCircleContact.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2EdgeAndPolygonContact.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
+		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2PolygonAndCircleContact.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2PolygonContact.h">
-			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
-		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Contacts\b2TOISolver.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Contacts</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2DistanceJoint.h">
@@ -299,7 +359,7 @@
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2Joint.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
 		</ClInclude>
-		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2LineJoint.h">
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2MotorJoint.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2MouseJoint.h">
@@ -314,8 +374,17 @@
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2RevoluteJoint.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
 		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2RopeJoint.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
+		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2WeldJoint.h">
 			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2WheelJoint.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Dynamics\Joints</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Rope\b2Rope.h">
+			<Filter>addons\ofxBox2d\libs\Box2D\Rope</Filter>
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\assert.hpp">
 			<Filter>addons\ofxBox2d\libs\triangle</Filter>
